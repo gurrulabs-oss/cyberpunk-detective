@@ -195,40 +195,64 @@
     .lang option{color:#000;}
 
     /* Google Play badge button (official look) */
-    .gp-badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius: 12px;
-      overflow:hidden;
-      border:1px solid rgba(233,247,255,.12);
-      background: rgba(0,0,0,.20);
-      box-shadow: 0 14px 32px rgba(0,0,0,.35);
-      transition: transform .12s ease, border-color .12s ease;
+    /* Hero (first) Google Play badge */
+    .gp-badge--hero{
+      border: none;
+      background: transparent;
+      box-shadow: none;
     }
+
+    /* Make the hero badge bigger */
+.gp-badge.gp-badge--hero img{
+  height: 72px;
+  width: auto;
+}
+
+
+
     .gp-badge:hover{
       transform: translateY(-1px);
       border-color: rgba(233,247,255,.24);
     }
     .gp-badge img{
       display:block;
-      height: 48px; /* slightly bigger = more premium */
+      height: 44px;
       width: auto;
     }
 
+
     /* Hero */
     .hero{padding: 4.0rem 0 2.2rem;}
-    .heroGrid{
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 2.1rem;
-      align-items:start;
-    }
+.heroGrid{
+  display:grid;
+  grid-template-columns: 1fr;  /* ✅ always stacked */
+  gap: 1.2rem;
+  align-items:start;
+}
+
 
     /* Make the preview appear in the right column on desktop,
        but naturally below the download badge on mobile. */
-    .heroCopy{grid-column:1; grid-row:1;}
-    .heroCard{grid-column:2; grid-row:1;}
+
+    /* Make the hero Play badge occupy ~1/3 of text width */
+.heroActions--wide{
+  width: 100%;
+  max-width: 100%; /* match paragraph width */
+}
+
+
+
+.heroActions--wide .gp-badge{
+  width: auto;              /* don't stretch the clickable area */
+  justify-content: flex-start;
+}
+
+/* Left align the badge image */
+.heroActions--wide .gp-badge img{
+  margin: 0;                /* remove auto-centering */
+}
+
+
 
     @media (max-width: 900px){
       .heroGrid{grid-template-columns:1fr; gap:1.2rem;}
@@ -257,25 +281,28 @@
       box-shadow: 0 0 18px rgba(0,255,240,.85);
     }
 
-    h1{
-      margin:.85rem 0 .8rem;
-      font-size: clamp(2.05rem, 3.5vw, 3.15rem);
-      line-height:1.08;
-      letter-spacing:-.02em;
-      font-weight: 950;
-    }
+h1{
+  margin:.85rem 0 .8rem;
+  font-size: clamp(2.05rem, 3.5vw, 3.15rem);
+  line-height:1.08;
+  letter-spacing:-.02em;
+  font-weight: 950;
+
+}
+
     .glow{
       background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--purple));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
     }
-    .lead{
-      color: var(--muted);
-      font-size: 1.08rem;
-      max-width: 60ch;
-      margin: 0 0 1.05rem;
-    }
+.lead{
+  color: var(--muted);
+  font-size: 1.08rem;
+  max-width: 100%;
+  margin: 0 0 1.05rem;
+}
+
 
     .heroActions{
       display:flex;
@@ -309,33 +336,17 @@
       white-space:nowrap;
     }
     .heroShot{
-      position:relative;
-      aspect-ratio: 10 / 13;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(0,255,240,.20), transparent 55%),
-        radial-gradient(circle at 75% 30%, rgba(255,47,210,.16), transparent 56%),
-        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.55));
-      display:flex; align-items:center; justify-content:center; padding: 1rem;
-    }
-    .heroShotInner{
-      width: min(280px, 82%);
-      border-radius: 22px;
-      border:1px solid rgba(233,247,255,.16);
-      background: rgba(0,0,0,.25);
-      box-shadow: 0 18px 44px rgba(0,0,0,.55);
-      overflow:hidden;
-    }
-    .heroShotInner img{width:100%; display:block;}
-    .heroShotHint{
-      position:absolute; left: 1rem; bottom: 1rem; right: 1rem;
-      color: rgba(233,247,255,.80);
-      font-weight:800; font-size:.9rem;
-      background: rgba(0,0,0,.28);
-      border:1px solid rgba(233,247,255,.12);
-      padding: .6rem .75rem;
-      border-radius: 14px;
-      backdrop-filter: blur(10px);
-    }
+  padding: 0;                 /* ✅ no extra space */
+  background: transparent;     /* ✅ no dummy background */
+  aspect-ratio: auto;          /* ✅ don't force portrait */
+}
+
+.heroShot img{
+  width: 100%;
+  height: auto;               /* ✅ keeps horizontal ratio */
+  display: block;
+}
+
 
     /* Sections */
     section{padding: 2.15rem 0;}
@@ -390,7 +401,14 @@
       display:flex; align-items:center; justify-content:center;
       position:relative;
     }
-    .shot img{width:100%; height:100%; object-fit:cover; display:block;}
+    .shot img{
+  width:100%;
+  height:100%;
+  object-fit: contain;   /* ✅ no crop */
+  display:block;
+  background: rgba(0,0,0,.22); /* optional: looks nicer for letterboxing */
+}
+
     .label{
       position:absolute; left:.75rem; bottom:.75rem; right:.75rem;
       background: rgba(0,0,0,.28);
@@ -401,6 +419,77 @@
       font-weight:900; font-size:.82rem;
       color: rgba(233,247,255,.92);
     }
+
+
+/* STORIES section screenshots: 2 centered, smaller */
+.shots--stories{
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 640px;      /* smaller than main galleries */
+  margin: 1.2rem auto 0; /* center horizontally */
+  gap: .75rem;
+}
+
+/* Make the screenshots slightly less tall */
+.shots--stories .shot{
+  aspect-ratio: 16 / 9;  /* cinematic, horizontal feel */
+}
+@media (max-width: 600px){
+  .shots--stories{
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+}
+
+
+
+/* Make screenshots feel clickable */
+.shotLink{
+  display:block;
+  width:100%;
+  height:100%;
+  cursor: zoom-in;
+}
+
+/* Lightbox overlay */
+.lightbox{
+  position: fixed;
+  inset: 0;
+  display: none;              /* hidden by default */
+  place-items: center;
+  background: rgba(0,0,0,.82);
+  z-index: 9999;
+  padding: 2rem 1rem;
+}
+
+.lightbox.isOpen{
+  display: grid;
+}
+
+.lightbox img{
+  max-width: min(92vw, 1200px);
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.65);
+  cursor: zoom-out;
+}
+
+.lightboxClose{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.20);
+  background: rgba(0,0,0,.35);
+  color: rgba(255,255,255,.92);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10000;
+}
 
     /* FAQ */
     details{
@@ -487,7 +576,9 @@
              href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=header_badge&utm_term=google_play_badge"
              target="_blank" rel="noopener"
              aria-label="Get it on Google Play">
-            <img src="assets/google-play-badge.png" alt="Get it on Google Play" onerror="this.style.display='none'">
+              <img
+                      src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                      alt="Get it on Google Play">
           </a>
         </div>
       </div>
@@ -515,37 +606,30 @@
               <b>Cyberpunk Detective: Crime Podcast</b> is a <b>fictional true crime podcast</b> set in a dark cyberpunk future —
               with interactive detective gameplay. Explore cyber crime, corruption, and neon noir mysteries.
             </p>
-
-            <!-- ONLY ONE BUTTON: Google Play badge (replaces "What is it?") -->
-            <div class="heroActions">
-              <a class="gp-badge"
-                 href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=hero_badge&utm_term=google_play_badge"
-                 target="_blank" rel="noopener"
-                 aria-label="Get it on Google Play">
-                <img src="assets/google-play-badge.png" alt="Get it on Google Play" onerror="this.style.display='none'">
-              </a>
-            </div>
-          </div>
-
-          <!-- Preview card
-               On desktop: right column.
-               On mobile: naturally BELOW the badge (because grid collapses). -->
-          <aside class="heroCard" aria-label="Preview">
-            <div class="heroCardTop">
-              <div>
-                <p class="miniTitle">Preview</p>
-                <p class="miniSub">Put screenshots in <code>assets/</code> (shot-1.png etc.).</p>
+              <div class="heroActions heroActions--wide">
+                  <a class="gp-badge gp-badge--hero"
+                     href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=header_badge&utm_term=google_play_badge"
+                     rel="noopener">
+                      <img
+                              src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                              alt="Get it on Google Play">
+                  </a>
               </div>
-              <span class="miniBadge">Android</span>
-            </div>
+
+          </div> <!-- ✅ CLOSES .heroCopy -->
+
+            <!-- Preview card
+                 On desktop: right column.
+                 On mobile: naturally BELOW the badge (because grid collapses). -->
+            <aside class="heroCard" aria-label="Preview">
+
+
 
             <div class="heroShot">
               <div class="heroShotInner">
                 <img src="assets/shot-1.png" alt="Cyberpunk Detective screenshot" onerror="this.remove();">
               </div>
-              <div class="heroShotHint">
-                Tip: add <b>3–6</b> strong screenshots + one OG image for better clicks.
-              </div>
+
             </div>
           </aside>
 
@@ -592,7 +676,8 @@
             Inspired by noir detective fiction, cyberpunk classics, and modern crime podcasts.
           </p>
 
-          <p style="margin-top: 1rem;">
+            <!--
+            <p style="margin-top: 1rem;">
             <b>
               <a style="color: var(--cyan); text-decoration:none;"
                  href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=what_section&utm_term=cta_link"
@@ -601,8 +686,34 @@
               </a>
             </b>
           </p>
+          -->
+            <div class="shots" aria-label="Screenshots gallery">
+                <div class="shot">
+                    <a class="shotLink" href="assets/shot-2.png">
+                    <img src="assets/shot-2.png" alt="Podcast mode screenshot" onerror="this.remove();">
+                    </a>
+
+                </div>
+                <div class="shot">
+                    <a class="shotLink" href="assets/shot-3.png">
+                    <img src="assets/shot-3.png" alt="Interactive mode screenshot" onerror="this.remove();">
+                    </a>
+
+                </div>
+                <div class="shot">
+                    <a class="shotLink" href="assets/shot-4.png">
+                    <img src="assets/shot-4.png" alt="Investigation screenshot" onerror="this.remove();">
+                    </a>
+
+                </div>
+            </div>
         </div>
+
+
       </section>
+
+
+
 
       <!-- STORIES -->
       <section id="stories">
@@ -614,6 +725,20 @@
             <li>🎧 Listen to cinematic <b>crime podcast episodes</b></li>
             <li>🌃 Explore cyber crime, corruption, and neon noir mysteries</li>
           </ul>
+            <div class="shots shots--stories" aria-label="Screenshots gallery">
+                <div class="shot">
+                    <a class="shotLink" href="assets/shot-2.png">
+                        <img src="assets/shot-2.png" alt="Podcast mode screenshot" onerror="this.remove();">
+                    </a>
+                </div>
+                <div class="shot">
+                    <a class="shotLink" href="assets/shot-3.png">
+                        <img src="assets/shot-3.png" alt="Interactive mode screenshot" onerror="this.remove();">
+                    </a>
+                </div>
+
+            </div>
+
 
           <div class="divider" role="separator" aria-label="divider"></div>
 
@@ -623,20 +748,6 @@
             <li>Make choices, analyze clues, and solve the case yourself</li>
           </ul>
 
-          <div class="shots" aria-label="Screenshots gallery">
-            <div class="shot">
-              <img src="assets/shot-2.png" alt="Podcast mode screenshot" onerror="this.remove();">
-              <div class="label">Podcast Mode</div>
-            </div>
-            <div class="shot">
-              <img src="assets/shot-3.png" alt="Interactive mode screenshot" onerror="this.remove();">
-              <div class="label">Interactive Mode</div>
-            </div>
-            <div class="shot">
-              <img src="assets/shot-4.png" alt="Investigation screenshot" onerror="this.remove();">
-              <div class="label">Investigation</div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -681,14 +792,7 @@
                 <li>Original cyberpunk universe</li>
               </ul>
 
-              <div class="divider" role="separator" aria-label="divider"></div>
 
-              <a class="gp-badge"
-                 href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=for_badge&utm_term=google_play_badge"
-                 target="_blank" rel="noopener"
-                 aria-label="Get it on Google Play">
-                <img src="assets/google-play-badge.png" alt="Get it on Google Play" onerror="this.style.display='none'">
-              </a>
             </div>
           </div>
         </div>
@@ -699,22 +803,22 @@
         <div class="sectionCard">
           <h2>❓ FAQ</h2>
 
-          <details>
+            <details open>
             <summary>Is Cyberpunk Detective a real true crime podcast?</summary>
             <p>It’s a <b>fictional true crime podcast</b>, inspired by real investigative formats and set in a cyberpunk world.</p>
           </details>
 
-          <details>
+            <details open>
             <summary>Can I play instead of just listening?</summary>
             <p>Yes. You can switch between <b>podcast mode</b> and <b>interactive detective gameplay</b> at any time.</p>
           </details>
 
-          <details>
+            <details open>
             <summary>Is Cyberpunk Detective a game or a podcast?</summary>
             <p>It’s both — a <b>crime podcast</b> and an <b>interactive text-based detective RPG</b>.</p>
           </details>
 
-          <details>
+            <details open>
             <summary>Does it work offline?</summary>
             <p>Yes. Stories and episodes can be enjoyed offline once downloaded.</p>
           </details>
@@ -739,6 +843,10 @@
     </div>
   </main>
 
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+      <button type="button" class="lightboxClose" aria-label="Close image">×</button>
+      <img id="lightboxImg" alt="">
+  </div>
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -774,7 +882,57 @@
         e.target.value = "en";
       }
     });
+      // Lightbox for screenshots (click to open, click outside/X/Esc to close)
+(function(){
+  const box = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  const closeBtn = document.querySelector('.lightboxClose');
+
+  if (!box || !img || !closeBtn) return;
+
+  function openLightbox(src, alt){
+    img.src = src;
+    img.alt = alt || '';
+    box.classList.add('isOpen');
+    box.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // lock background scroll
+  }
+
+  function closeLightbox(){
+    box.classList.remove('isOpen');
+    box.setAttribute('aria-hidden', 'true');
+    img.src = '';
+    img.alt = '';
+    document.body.style.overflow = ''; // restore scroll
+  }
+
+  // bind clicks to all screenshot links
+  document.querySelectorAll('.shotLink').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const image = a.querySelector('img');
+      openLightbox(a.getAttribute('href'), image ? image.alt : '');
+    });
+  });
+
+  // close with X
+  closeBtn.addEventListener('click', closeLightbox);
+
+  // close when clicking outside the image
+  box.addEventListener('click', (e) => {
+    if (e.target === box) closeLightbox();
+  });
+
+  // close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && box.classList.contains('isOpen')) closeLightbox();
+  });
+})();
+
   </script>
+  <!-- Lightbox overlay -->
+
+
 </body>
 </html>
 
