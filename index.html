@@ -13,9 +13,13 @@
   <meta property="og:description" content="A cyberpunk fictional true crime podcast you can play — podcast episodes + interactive detective gameplay." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gurrulabs-oss.github.io/cyberpunk-detective/" />
-  <meta property="og:image" content="assets/og-image.png" />
+    <meta property="og:image" content="https://gurrulabs-oss.github.io/cyberpunk-detective/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
-  <!-- Twitter -->
+
+
+    <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Cyberpunk Detective: True Crime Podcast & Interactive RPG" />
   <meta name="twitter:description" content="A cyberpunk fictional true crime podcast you can play — podcast episodes + interactive detective gameplay." />
@@ -563,11 +567,18 @@ h1{
         mixpanel.init("20a6baa8d266700297f9b0b16efc0a13", {
           persistence: "localStorage",
             ip: true,
-  api_host: "https://api-eu.mixpanel.com/track?ip=1"  // ✅ EU ingestion endpoint
+  api_host: "https://api-eu.mixpanel.com"  // ✅ EU ingestion endpoint
         });
     </script>
 
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png">
+
+
 </head>
+
+
 
 <body>
   <div class="backdrop" aria-hidden="true"></div>
@@ -905,18 +916,47 @@ h1{
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-// Mixpanel: page view (wait until Mixpanel is ready)
-(function(){
-  if (window.mixpanel && typeof mixpanel.track === "function") {
-    mixpanel.track("Cyberpunk Main Page - View");
-  } else {
-    window.addEventListener("load", () => {
-      if (window.mixpanel && typeof mixpanel.track === "function") {
-        mixpanel.track("Cyberpunk Main Page - View");
-      }
+// Mixpanel: page view + attribution (referrer + UTM)
+(function () {
+  function trackView() {
+    if (!(window.mixpanel && typeof mixpanel.track === "function" && typeof mixpanel.register === "function")) {
+      return false;
+    }
+
+    const ref = document.referrer || "";
+    const isGoogle = /(^|\/\/)(www\.)?google\./i.test(ref);
+
+    const params = new URLSearchParams(window.location.search);
+    const utm_source = params.get("utm_source");
+    const utm_medium = params.get("utm_medium");
+    const utm_campaign = params.get("utm_campaign");
+    const utm_term = params.get("utm_term");
+    const utm_content = params.get("utm_content");
+
+    // Persist attribution for subsequent events
+    mixpanel.register({
+      referrer: ref || "direct",
+      referrer_is_google: isGoogle,
+      landing_url: window.location.href,
+      landing_path: window.location.pathname,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_term,
+      utm_content
     });
+
+    // Track view
+    mixpanel.track("Cyberpunk Main Page - View");
+    return true;
+  }
+
+  // Try immediately; if Mixpanel isn't ready yet, try on load
+  if (!trackView()) {
+    window.addEventListener("load", () => { trackView(); });
   }
 })();
+
 
 
 
