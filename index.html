@@ -6,60 +6,130 @@
     <title>Cyberpunk Detective | True Crime Interactive RPG</title>
     <meta name="description" content="Solve noir mysteries in a neon-drenched future. Play the ultimate Cyberpunk Detective RPG on Android. Download now on Google Play.">
     
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --primary: #FF2E97;       /* Magenta from App */
+            --secondary: #00D4FF;     /* Cyan from App */
+            --background: #0A0E12;    /* Dark Background */
+            --surface: #0F131A;       /* Surface */
+            --on-surface: #DDE7F5;    /* Primary Text */
+            --on-surface-variant: #B6C3D8; /* Secondary Text */
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--on-surface);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
             text-align: center;
         }
+
+        h1, h2, h3, .cyber-font {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
         .container {
-            padding: 50px 20px;
+            padding: 80px 20px;
             max-width: 800px;
             margin: auto;
         }
+
         h1 {
-            color: #00ffcc; /* Neon Cyan */
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 2.5rem;
-            text-shadow: 0 0 10px #00ffcc;
+            color: var(--primary);
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(255, 46, 151, 0.6);
+            margin-bottom: 10px;
         }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
         p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #cccccc;
+            font-size: 1.1rem;
+            color: var(--on-surface-variant);
+            max-width: 650px;
+            margin: 20px auto;
         }
+
         .cta-button {
             display: inline-block;
-            margin-top: 30px;
-            padding: 15px 40px;
-            background-color: #ff0055; /* Cyber Pink */
+            margin-top: 40px;
+            padding: 18px 45px;
+            background-color: var(--primary);
             color: white;
             text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
             font-weight: bold;
-            border-radius: 5px;
-            font-size: 1.3rem;
-            box-shadow: 0 0 15px #ff0055;
-            transition: 0.3s;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            box-shadow: 0 0 20px rgba(255, 46, 151, 0.4);
+            transition: 0.3s all ease;
+            border: none;
+            cursor: pointer;
         }
+
         .cta-button:hover {
             transform: scale(1.05);
-            background-color: #ff3377;
+            box-shadow: 0 0 30px rgba(255, 46, 151, 0.7);
+            background-color: #ff4d9a;
         }
+
+        .content-section {
+            background: var(--surface);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 60px;
+            text-align: left;
+        }
+
+        h2 {
+            color: var(--secondary);
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            margin-bottom: 25px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: var(--on-surface);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
         .screenshot {
             width: 100%;
-            max-width: 600px;
-            border: 2px solid #00ffcc;
-            margin-top: 40px;
-            border-radius: 10px;
+            max-width: 700px;
+            border: 2px solid var(--secondary);
+            margin: 50px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
         }
+
         .footer {
             margin-top: 100px;
-            font-size: 0.8rem;
-            color: #444;
+            padding-bottom: 40px;
+            font-size: 0.85rem;
+            color: var(--on-surface-variant);
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -67,19 +137,38 @@
 
     <div class="container">
         <h1>Cyberpunk Detective</h1>
-        <p>A True Crime Podcast turned into an Interactive RPG.</p>
+        <div class="tagline">True Crime Podcast & Interactive RPG</div>
         
         <p>Step into the neon-drenched streets of the future. Search for clues, interrogate suspects, and solve the mysteries that the police won't touch.</p>
 
-        <a href="https://play.google.com/store/apps/details?id=YOUR_APP_ID" class="cta-button">
+        <a href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes" class="cta-button">
             DOWNLOAD ON GOOGLE PLAY
         </a>
 
         <br>
         <img src="hero-image.jpg" alt="Cyberpunk Detective Gameplay" class="screenshot">
 
+        <div class="content-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <span class="faq-question">Is Cyberpunk Detective a real true crime podcast?</span>
+                <p>It’s a fictional true crime podcast, inspired by real investigative formats and set in a cyberpunk world.</p>
+            </div>
+
+            <div class="faq-item">
+                <span class="faq-question">Can I play instead of just listening?</span>
+                <p>Yes. You can switch between podcast mode and interactive detective gameplay at any time.</p>
+            </div>
+
+            <div class="faq-item">
+                <span class="faq-question">Is Cyberpunk Detective a game or a podcast?</span>
+                <p>It’s both — a crime podcast and an interactive text-based detective RPG.</p>
+            </div>
+        </div>
+
         <div class="footer">
-            © 2024 Your Studio Name | Built with GitHub Pages
+            © 2024 Gurru Labs | Built with GitHub Pages
         </div>
     </div>
 
