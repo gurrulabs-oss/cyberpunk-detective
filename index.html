@@ -533,6 +533,40 @@ h1{
     ]
   }
   </script>
+
+    <!-- Mixpanel -->
+    <script>
+        (function(f,b){
+          if(!b.__SV){
+            var a,e,i,g;window.mixpanel=b;b._i=[];
+            b.init=function(a,e,d){
+              function f(b,h){
+                var a=h.split(".");
+                2==a.length&&(b=b[a[0]],h=a[1]);
+                b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}
+              }
+              var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";
+              c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};
+              c.people.toString=function(){return c.toString(1)+".people (stub)"};
+              i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+              for(g=0;g<i.length;g++)f(c,i[g]);
+              b._i.push([a,e,d])
+            };
+            b.__SV=1.2;
+            a=f.createElement("script");a.type="text/javascript";a.async=!0;
+            a.src="https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+            e=f.getElementsByTagName("script")[0];e.parentNode.insertBefore(a,e)
+          }
+        })(document,window.mixpanel||[]);
+
+        // 🔁 Replace with your real token
+        mixpanel.init("20a6baa8d266700297f9b0b16efc0a13", {
+          persistence: "localStorage",
+            ip: true,
+  api_host: "https://api-eu.mixpanel.com/track?ip=1"  // ✅ EU ingestion endpoint
+        });
+    </script>
+
 </head>
 
 <body>
@@ -851,6 +885,21 @@ h1{
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
+// Mixpanel: page view (wait until Mixpanel is ready)
+(function(){
+  if (window.mixpanel && typeof mixpanel.track === "function") {
+    mixpanel.track("Cyberpunk Main Page - View");
+  } else {
+    window.addEventListener("load", () => {
+      if (window.mixpanel && typeof mixpanel.track === "function") {
+        mixpanel.track("Cyberpunk Main Page - View");
+      }
+    });
+  }
+})();
+
+
+
     // Smooth scrolling (respects reduced-motion)
     (function() {
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -928,6 +977,28 @@ h1{
     if (e.key === 'Escape' && box.classList.contains('isOpen')) closeLightbox();
   });
 })();
+
+      // Mixpanel: Play Store clicks
+(function(){
+  const playLinks = [
+    document.querySelector('.navRight a.gp-badge[href*="play.google.com"]'),
+    document.querySelector('.heroActions a.gp-badge--hero[href*="play.google.com"]'),
+    document.querySelector('.footerLinks a[href*="play.google.com"]')
+  ].filter(Boolean);
+
+  playLinks.forEach(a => {
+    a.addEventListener('click', () => {
+      mixpanel.track("Cyberpunk Main Page - Play Store Clicked", {
+        placement:
+          a.closest('.navRight') ? 'topbar' :
+          a.closest('.heroActions') ? 'hero' :
+          a.closest('.footerLinks') ? 'footer' :
+          'unknown'
+      });
+    });
+  });
+})();
+
 
   </script>
   <!-- Lightbox overlay -->
