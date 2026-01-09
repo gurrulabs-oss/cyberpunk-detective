@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gurrulabs-oss.github.io/cyberpunk-detective/sitemap.xml
