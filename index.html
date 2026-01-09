@@ -1,184 +1,805 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberpunk Detective | True Crime Interactive RPG</title>
-    <meta name="title" content="Cyberpunk Detective | True Crime Podcast & Interactive RPG">
-<meta name="description" content="Solve noir mysteries in a neon-drenched future. Play the ultimate Cyberpunk Detective RPG and True Crime Podcast on Android.">
-<meta name="keywords" content="Cyberpunk Detective, True Crime Podcast Game, Interactive RPG, Detective Noir, Cyberpunk Game, Mystery RPG">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://gurrulabs-oss.github.io/cyberpunk-detective/">
-<meta property="og:title" content="Cyberpunk Detective | Interactive True Crime RPG">
-<meta property="og:description" content="Step into the neon streets. Solve crimes in a podcast-style RPG.">
-<meta property="og:image" content="https://gurrulabs-oss.github.io/cyberpunk-detective/hero-image.jpg">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Cyberpunk Detective: True Crime Podcast & Interactive RPG</title>
+  <meta name="description" content="Cyberpunk Detective is a fictional true crime podcast you can play — a neon-noir interactive detective RPG with podcast episodes and branching text stories." />
+  <meta name="theme-color" content="#0a0b10" />
 
-    <style>
-        :root {
-            --primary: #FF2E97;       /* Magenta from App */
-            --secondary: #00D4FF;     /* Cyan from App */
-            --background: #0A0E12;    /* Dark Background */
-            --surface: #0F131A;       /* Surface */
-            --on-surface: #DDE7F5;    /* Primary Text */
-            --on-surface-variant: #B6C3D8; /* Secondary Text */
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyberpunk Detective: True Crime Podcast & Interactive RPG" />
+  <meta property="og:description" content="A cyberpunk fictional true crime podcast you can play — podcast episodes + interactive detective gameplay." />
+  <meta property="og:type" content="website" />
+  <!-- TODO: Replace with your real GitHub Pages URL -->
+  <meta property="og:url" content="https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO/" />
+  <!-- TODO: Add an OG image (1200x630) and update path -->
+  <meta property="og:image" content="assets/og-image.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyberpunk Detective: True Crime Podcast & Interactive RPG" />
+  <meta name="twitter:description" content="A cyberpunk fictional true crime podcast you can play — podcast episodes + interactive detective gameplay." />
+  <meta name="twitter:image" content="assets/og-image.png" />
+
+  <style>
+    :root{
+      /* ===== App vibe colors (neon cyberpunk) ===== */
+      --bg0:#0a0b10;
+      --bg1:#11131a;
+      --text:#e9f7ff;
+      --muted:rgba(233,247,255,.75);
+      --muted2:rgba(233,247,255,.60);
+
+      --cyan:#00fff0;
+      --purple:#7b00ff;
+      --magenta:#ff2fd2;
+
+      --shadow: 0 24px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 980px;
+    }
+
+    *{box-sizing:border-box}
+    html, body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height:1.55;
+      background: var(--bg0);
+      overflow-x:hidden;
+    }
+
+    /* =======================
+       DEGRADATED BACKGROUND
+       (app-like neon gradients)
+       ======================= */
+    .backdrop{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+
+      /* Neon glow layers + dark base */
+      background:
+        radial-gradient(circle at 30% 30%, rgba(0,255,240,.22), transparent 60%),
+        radial-gradient(circle at 72% 40%, rgba(123,0,255,.20), transparent 60%),
+        radial-gradient(circle at 55% 78%, rgba(255,47,210,.14), transparent 62%),
+        linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 55%, var(--bg0) 100%);
+
+      background-size: 200% 200%;
+      animation: glowShift 18s ease-in-out infinite;
+    }
+    @keyframes glowShift{
+      0%{background-position: 0% 0%;}
+      50%{background-position: 100% 100%;}
+      100%{background-position: 0% 0%;}
+    }
+
+    /* Optional scanlines (subtle) */
+    .scanlines{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.030),
+        rgba(255,255,255,.030) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      mix-blend-mode: overlay;
+      opacity:.55;
+    }
+
+    /* Vignette to focus content */
+    .vignette{
+      position:fixed;
+      inset:-20vmax;
+      z-index:-1;
+      pointer-events:none;
+      background: radial-gradient(circle, transparent 40%, rgba(0,0,0,.65) 78%, rgba(0,0,0,.9) 100%);
+    }
+
+    /* =======================
+       LAYOUT
+       ======================= */
+    .container{
+      width:min(var(--max), calc(100% - 2.5rem));
+      margin:0 auto;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(14px);
+      background: rgba(10,11,16,.55);
+      border-bottom:1px solid rgba(233,247,255,.08);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: .9rem 0;
+      gap:1rem;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+      text-decoration:none;
+      color:var(--text);
+      min-width: 200px;
+    }
+    .brand img{
+      width:38px;height:38px;
+      border-radius:10px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.45);
+    }
+    .brand .name{
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      line-height:1.1;
+      font-size:.95rem;
+    }
+    .brand .tag{
+      display:block;
+      font-size:.78rem;
+      color:var(--muted2);
+      letter-spacing:.02em;
+      text-transform:none;
+      font-weight:600;
+      margin-top:.1rem;
+    }
+
+    .navlinks{
+      display:flex;
+      align-items:center;
+      gap:1.1rem;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .navlinks a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:700;
+      font-size:.92rem;
+      padding:.35rem .35rem;
+    }
+    .navlinks a:hover{color:var(--text)}
+    .navcta{display:flex; gap:.6rem; align-items:center;}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.5rem;
+      padding:.85rem 1.05rem;
+      border-radius: 14px;
+      font-weight:900;
+      letter-spacing:.02em;
+      text-decoration:none;
+      border:1px solid rgba(233,247,255,.16);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      box-shadow: 0 14px 32px rgba(0,0,0,.35);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(233,247,255,.28);
+      background: rgba(255,255,255,.06);
+    }
+    .btn-primary{
+      color:#000;
+      border-color: rgba(0,255,240,.35);
+      background: linear-gradient(90deg, rgba(0,255,240,.98), rgba(123,0,255,.96));
+      box-shadow: 0 18px 46px rgba(0,0,0,.55);
+    }
+    .btn-small{
+      padding:.60rem .85rem;
+      border-radius: 12px;
+      font-size:.9rem;
+    }
+
+    /* =======================
+       HERO
+       ======================= */
+    .hero{padding: 4.3rem 0 2.7rem;}
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 2.1rem;
+      align-items:center;
+    }
+    @media (max-width: 900px){
+      .heroGrid{grid-template-columns:1fr; gap:1.6rem;}
+      .brand{min-width:auto}
+    }
+
+    .kicker{
+      display:inline-flex;
+      gap:.55rem;
+      align-items:center;
+      padding:.45rem .7rem;
+      border-radius: 999px;
+      border:1px solid rgba(0,255,240,.35);
+      background: rgba(0,255,240,.06);
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      font-size:.75rem;
+      color: rgba(233,247,255,.92);
+    }
+    .dot{
+      width:9px;height:9px;border-radius:99px;
+      background: var(--cyan);
+      box-shadow: 0 0 18px rgba(0,255,240,.85);
+    }
+
+    h1{
+      margin:.85rem 0 .8rem;
+      font-size: clamp(2.15rem, 3.6vw, 3.15rem);
+      line-height:1.08;
+      letter-spacing:-.02em;
+      font-weight: 950;
+    }
+    .glow{
+      background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--purple));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .lead{
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 60ch;
+      margin: 0 0 1.25rem;
+    }
+
+    .heroActions{display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; margin-top: 1.2rem;}
+    .trust{display:flex; gap:1rem; flex-wrap:wrap; margin-top: 1.2rem; color: var(--muted2); font-weight:700; font-size:.92rem;}
+    .pill{
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.55rem .75rem; border-radius: 999px;
+      border:1px solid rgba(233,247,255,.14);
+      background: rgba(255,255,255,.04);
+    }
+    .pill b{color: var(--text);}
+
+    .heroCard{
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(17,19,26,.78), rgba(17,19,26,.55));
+      border: 1px solid rgba(233,247,255,.14);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .heroCardTop{
+      padding: 1.15rem 1.15rem .85rem;
+      display:flex; justify-content:space-between; gap:1rem;
+      border-bottom: 1px solid rgba(233,247,255,.08);
+    }
+    .miniTitle{font-weight:950; letter-spacing:.06em; text-transform:uppercase; font-size:.9rem; margin:0;}
+    .miniSub{margin:.35rem 0 0; color: var(--muted2); font-weight:700; font-size:.95rem;}
+    .miniBadge{
+      padding:.4rem .6rem; border-radius: 999px;
+      font-weight:900; font-size:.78rem;
+      border:1px solid rgba(123,0,255,.38);
+      background: rgba(123,0,255,.10);
+      color: rgba(233,247,255,.92);
+      white-space:nowrap;
+    }
+    .heroShot{
+      position:relative;
+      aspect-ratio: 10 / 13;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(0,255,240,.20), transparent 55%),
+        radial-gradient(circle at 75% 30%, rgba(255,47,210,.16), transparent 56%),
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.55));
+      display:flex; align-items:center; justify-content:center; padding: 1rem;
+    }
+    .heroShotInner{
+      width: min(280px, 82%);
+      border-radius: 22px;
+      border:1px solid rgba(233,247,255,.16);
+      background: rgba(0,0,0,.25);
+      box-shadow: 0 18px 44px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .heroShotInner img{width:100%; display:block;}
+    .heroShotHint{
+      position:absolute; left: 1rem; bottom: 1rem; right: 1rem;
+      color: rgba(233,247,255,.80);
+      font-weight:800; font-size:.9rem;
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(233,247,255,.12);
+      padding: .6rem .75rem;
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* =======================
+       SECTIONS
+       ======================= */
+    section{padding: 2.4rem 0;}
+    .sectionCard{
+      border-radius: var(--radius2);
+      border:1px solid rgba(233,247,255,.12);
+      background: linear-gradient(180deg, rgba(17,19,26,.70), rgba(17,19,26,.46));
+      box-shadow: var(--shadow);
+      padding: 1.7rem;
+    }
+    h2{margin:0 0 .75rem; font-size: 1.55rem;}
+    h3{margin: 1.25rem 0 .35rem; font-size: 1.15rem;}
+    p{margin:.55rem 0}
+    ul{margin:.65rem 0 0; padding-left: 1.15rem;}
+    li{margin:.35rem 0; color: var(--muted); font-weight:650;}
+    li b{color: var(--text);}
+
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:1.1rem;}
+    @media (max-width: 850px){
+      .grid2{grid-template-columns:1fr;}
+      .navlinks{display:none;}
+    }
+
+    .featureCard{
+      padding: 1.1rem;
+      border-radius: var(--radius);
+      border: 1px solid rgba(233,247,255,.12);
+      background: rgba(255,255,255,.03);
+    }
+    .titleRow{display:flex; align-items:center; gap:.6rem; font-weight:950; margin:0 0 .25rem;}
+    .icon{
+      width: 34px; height: 34px; border-radius: 12px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg, rgba(0,255,240,.18), rgba(123,0,255,.16));
+      border: 1px solid rgba(233,247,255,.14);
+      box-shadow: 0 12px 28px rgba(0,0,0,.45);
+      flex:0 0 auto;
+    }
+    .divider{
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,240,.30), rgba(255,47,210,.22), rgba(123,0,255,.30), transparent);
+      margin: 1.2rem 0;
+      opacity:.9;
+    }
+
+    /* Screenshots */
+    .shots{display:grid; grid-template-columns: repeat(3, 1fr); gap: .95rem; margin-top: .85rem;}
+    @media (max-width: 850px){.shots{grid-template-columns: 1fr;}}
+    .shot{
+      border-radius: 18px; overflow:hidden;
+      border: 1px solid rgba(233,247,255,.12);
+      background: rgba(255,255,255,.03);
+      box-shadow: 0 16px 44px rgba(0,0,0,.55);
+      aspect-ratio: 9 / 16;
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+    }
+    .shot img{width:100%; height:100%; object-fit:cover; display:block;}
+    .label{
+      position:absolute; left:.75rem; bottom:.75rem; right:.75rem;
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(233,247,255,.12);
+      backdrop-filter: blur(10px);
+      padding:.45rem .55rem;
+      border-radius: 12px;
+      font-weight:900; font-size:.82rem;
+      color: rgba(233,247,255,.92);
+    }
+
+    /* FAQ */
+    details{
+      border-radius: var(--radius);
+      border: 1px solid rgba(233,247,255,.12);
+      background: rgba(255,255,255,.03);
+      padding: .95rem 1rem;
+      margin: .75rem 0;
+    }
+    summary{cursor:pointer; font-weight:950; list-style:none;}
+    summary::-webkit-details-marker{display:none;}
+    details p{color: var(--muted); margin:.65rem 0 0;}
+
+    footer{padding: 2.2rem 0 3.2rem; color: var(--muted2); font-weight:650;}
+    .footerRow{
+      display:flex; justify-content:space-between; align-items:flex-start;
+      gap:1rem; flex-wrap:wrap;
+      border-top: 1px solid rgba(233,247,255,.10);
+      padding-top: 1.25rem;
+    }
+    .footerLinks{display:flex; gap:1rem; flex-wrap:wrap;}
+    .footerLinks a{color: var(--muted2); text-decoration:none; font-weight:800;}
+    .footerLinks a:hover{color: var(--text); text-decoration:underline;}
+
+    @media (prefers-reduced-motion: reduce){
+      .backdrop{animation:none;}
+      .btn{transition:none;}
+    }
+  </style>
+
+  <!-- FAQ Schema (helps SEO rich results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Cyberpunk Detective a real true crime podcast?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It’s a fictional true crime podcast inspired by real investigative formats and set in a cyberpunk world."
         }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--background);
-            color: var(--on-surface);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            text-align: center;
+      },
+      {
+        "@type": "Question",
+        "name": "Can I play instead of just listening?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can switch between podcast mode and interactive detective gameplay at any time."
         }
-
-        h1, h2, h3, .cyber-font {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+      },
+      {
+        "@type": "Question",
+        "name": "Is Cyberpunk Detective a game or a podcast?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It’s both — a crime podcast and an interactive text-based detective RPG."
         }
-
-        .container {
-            padding: 80px 20px;
-            max-width: 800px;
-            margin: auto;
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Stories and episodes can be enjoyed offline once downloaded."
         }
-
-        h1 {
-            color: var(--primary);
-            font-size: 3rem;
-            font-weight: 900;
-            text-shadow: 0 0 15px rgba(255, 46, 151, 0.6);
-            margin-bottom: 10px;
-        }
-
-        .tagline {
-            font-size: 1.4rem;
-            color: var(--secondary);
-            margin-bottom: 40px;
-            font-weight: 600;
-        }
-
-        p {
-            font-size: 1.1rem;
-            color: var(--on-surface-variant);
-            max-width: 650px;
-            margin: 20px auto;
-        }
-
-        .cta-button {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 18px 45px;
-            background-color: var(--primary);
-            color: white;
-            text-decoration: none;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            box-shadow: 0 0 20px rgba(255, 46, 151, 0.4);
-            transition: 0.3s all ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 46, 151, 0.7);
-            background-color: #ff4d9a;
-        }
-
-        .content-section {
-            background: var(--surface);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            padding: 40px;
-            border-radius: 15px;
-            margin-top: 60px;
-            text-align: left;
-        }
-
-        h2 {
-            color: var(--secondary);
-            font-size: 1.8rem;
-            border-bottom: 2px solid var(--primary);
-            display: inline-block;
-            padding-bottom: 5px;
-            margin-top: 30px;
-        }
-
-        .faq-item {
-            margin-bottom: 25px;
-        }
-
-        .faq-question {
-            font-weight: bold;
-            color: var(--on-surface);
-            display: block;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-
-        .screenshot {
-            width: 100%;
-            max-width: 700px;
-            border: 2px solid var(--secondary);
-            margin: 50px 0;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-        }
-
-        .footer {
-            margin-top: 100px;
-            padding-bottom: 40px;
-            font-size: 0.85rem;
-            color: var(--on-surface-variant);
-            opacity: 0.6;
-        }
-    </style>
+      }
+    ]
+  }
+  </script>
 </head>
+
 <body>
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
 
+  <!-- HEADER -->
+  <header>
     <div class="container">
-        <h1>Cyberpunk Detective</h1>
-        <div class="tagline">True Crime Podcast & Interactive RPG</div>
-        
-        <p>Step into the neon-drenched streets of the future. Search for clues, interrogate suspects, and solve the mysteries that the police won't touch.</p>
-
-        <a href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes" class="cta-button">
-            DOWNLOAD ON GOOGLE PLAY
+      <div class="nav">
+        <a class="brand" href="#top" aria-label="Cyberpunk Detective home">
+          <!-- Optional: add assets/icon.png -->
+          <img src="assets/icon.png" alt="Cyberpunk Detective icon" onerror="this.style.display='none'">
+          <div>
+            <div class="name">Cyberpunk Detective</div>
+            <span class="tag">True crime podcast • interactive RPG</span>
+          </div>
         </a>
 
-        <br>
-        <img src="hero-image.jpg" alt="Cyberpunk Detective Gameplay" class="screenshot">
+        <nav class="navlinks" aria-label="Site navigation">
+          <a href="#what">What it is</a>
+          <a href="#stories">Stories</a>
+          <a href="#world">World</a>
+          <a href="#for">For who</a>
+          <a href="#faq">FAQ</a>
+        </nav>
 
-        <div class="content-section">
-            <h2>Frequently Asked Questions</h2>
-            
-            <div class="faq-item">
-                <span class="faq-question">Is Cyberpunk Detective a real true crime podcast?</span>
-                <p>It’s a fictional true crime podcast, inspired by real investigative formats and set in a cyberpunk world.</p>
-            </div>
-
-            <div class="faq-item">
-                <span class="faq-question">Can I play instead of just listening?</span>
-                <p>Yes. You can switch between podcast mode and interactive detective gameplay at any time.</p>
-            </div>
-
-            <div class="faq-item">
-                <span class="faq-question">Is Cyberpunk Detective a game or a podcast?</span>
-                <p>It’s both — a crime podcast and an interactive text-based detective RPG.</p>
-            </div>
+        <div class="navcta">
+          <a class="btn btn-small" href="#download">Download</a>
+          <a class="btn btn-primary btn-small"
+             href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=webpage&utm_term=podcast_game"
+             target="_blank" rel="noopener">
+            Google Play →
+          </a>
         </div>
-
-        <div class="footer">
-            © 2024 Gurru Labs | Built with GitHub Pages
-        </div>
+      </div>
     </div>
+  </header>
 
+  <!-- MAIN -->
+  <main id="top">
+    <div class="container">
+
+      <!-- HERO (from your Notion content, rewritten cleanly) -->
+      <div class="hero">
+        <div class="heroGrid">
+          <div>
+            <div class="kicker"><span class="dot" aria-hidden="true"></span> A Cyberpunk True Crime Podcast You Can Play</div>
+
+            <h1>
+              Listen to <span class="glow">crime podcast episodes</span>.<br />
+              Play as a <span class="glow">detective</span> in interactive RPG stories.
+            </h1>
+
+            <p class="lead">
+              <b>Cyberpunk Detective: Crime Podcast</b> is a <b>fictional true crime podcast</b> set in a dark cyberpunk future —
+              with interactive detective gameplay. Explore cyber crime, corruption, and neon noir mysteries.
+            </p>
+
+            <!-- Language links (from Notion page) -->
+            <p style="margin:.6rem 0 0; color: var(--muted2); font-weight:800;">
+              🌍
+              <a style="color: var(--cyan); text-decoration:none;"
+                 href="https://www.notion.so/Cyberpunk-Detective-Podcast-de-Cr-menes-RPG-Interactivo-2d1816b03d13805281d2c48119c65214?pvs=21"
+                 target="_blank" rel="noopener">Leer en español</a>
+              &nbsp;·&nbsp;
+              🌍
+              <a style="color: var(--cyan); text-decoration:none;"
+                 href="https://www.notion.so/Cyberpunk-Detective-Podcast-de-Crimes-RPG-Interactif-2d1816b03d138091b0a7ddd63f297d52?pvs=21"
+                 target="_blank" rel="noopener">Lire en français</a>
+            </p>
+
+            <div class="heroActions">
+              <a class="btn btn-primary"
+                 href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=hero&utm_term=download"
+                 target="_blank" rel="noopener">
+                Download on Google Play
+              </a>
+              <a class="btn" href="#what">What is it?</a>
+            </div>
+
+            <div class="trust" role="list">
+              <div class="pill" role="listitem">🎧 <b>Podcast Mode</b> (listen)</div>
+              <div class="pill" role="listitem">🕵️ <b>Interactive Mode</b> (play)</div>
+              <div class="pill" role="listitem">🌙 <b>Offline-friendly</b></div>
+            </div>
+          </div>
+
+          <!-- Right card: screenshot placeholder -->
+          <aside class="heroCard" aria-label="Preview">
+            <div class="heroCardTop">
+              <div>
+                <p class="miniTitle">Preview</p>
+                <p class="miniSub">Put screenshots in <code>assets/</code> (shot-1.png etc.).</p>
+              </div>
+              <span class="miniBadge">Android</span>
+            </div>
+
+            <div class="heroShot">
+              <div class="heroShotInner">
+                <img src="assets/shot-1.png" alt="Cyberpunk Detective screenshot" onerror="this.remove();">
+              </div>
+              <div class="heroShotHint">
+                Tip: add <b>3–6</b> strong screenshots + one OG image for better clicks.
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- WHAT IS IT (Notion content restored) -->
+      <section id="what">
+        <div class="sectionCard">
+          <h2>🎧 What Is Cyberpunk Detective: Crime Podcast?</h2>
+
+          <p>
+            Cyberpunk Detective: Crime Podcast combines a <b>true crime podcast</b> with an
+            <b>interactive cyberpunk detective game</b>.
+          </p>
+
+          <p>Each investigation can be experienced in two ways:</p>
+
+          <div class="grid2" style="margin-top: 1rem;">
+            <div class="featureCard">
+              <div class="titleRow"><span class="icon" aria-hidden="true">🎙</span> Fictional True Crime Podcast</div>
+              <ul>
+                <li>High-quality <b>audio drama podcast</b></li>
+                <li>Cyber crime cases and digital conspiracies</li>
+                <li>Lost recordings, hacked files, and corrupted evidence</li>
+                <li>Designed for fans of <b>true crime podcasts</b> and mystery storytelling</li>
+              </ul>
+            </div>
+
+            <div class="featureCard">
+              <div class="titleRow"><span class="icon" aria-hidden="true">📖</span> Interactive Detective Game (Text RPG)</div>
+              <ul>
+                <li>Choice-driven <b>interactive fiction</b></li>
+                <li>Branching storylines with multiple endings</li>
+                <li>Text-based RPG gameplay focused on investigation</li>
+                <li>Inspired by <b>Twine</b> and classic text adventures</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="divider" role="separator" aria-label="divider"></div>
+
+          <p style="color: var(--muted); font-weight:700;">
+            Inspired by noir detective fiction, cyberpunk classics, and modern crime podcasts.
+          </p>
+
+          <p style="margin-top: 1rem;">
+            👉 <b>
+              <a style="color: var(--cyan); text-decoration:none;"
+                 href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=webpage&utm_term=podcast_game"
+                 target="_blank" rel="noopener">
+                Download Cyberpunk Detective: Crime Podcast on Google Play
+              </a>
+            </b>
+          </p>
+        </div>
+      </section>
+
+      <!-- STORIES / MODES (Notion content restored) -->
+      <section id="stories">
+        <div class="sectionCard">
+          <h2>🕵️ Cyberpunk Detective Stories — Audio or Interactive</h2>
+
+          <h3>🎙 Fictional True Crime Podcast</h3>
+          <ul>
+            <li>🎧 Listen to cinematic <b>crime podcast episodes</b></li>
+            <li>🌃 Explore cyber crime, corruption, and neon noir mysteries</li>
+          </ul>
+
+          <div class="divider" role="separator" aria-label="divider"></div>
+
+          <h3>📖 Interactive Detective Game (Text RPG)</h3>
+          <ul>
+            <li>🕵️ Play as a detective in <b>interactive text RPG stories</b></li>
+            <li>Make choices, analyze clues, and solve the case yourself</li>
+          </ul>
+
+          <!-- Screenshot gallery placeholders -->
+          <div class="shots" aria-label="Screenshots gallery">
+            <div class="shot">
+              <img src="assets/shot-2.png" alt="Podcast mode screenshot" onerror="this.remove();">
+              <div class="label">Podcast Mode</div>
+            </div>
+            <div class="shot">
+              <img src="assets/shot-3.png" alt="Interactive mode screenshot" onerror="this.remove();">
+              <div class="label">Interactive Mode</div>
+            </div>
+            <div class="shot">
+              <img src="assets/shot-4.png" alt="Investigation screenshot" onerror="this.remove();">
+              <div class="label">Investigation</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORLD (Notion content restored) -->
+      <section id="world">
+        <div class="sectionCard">
+          <h2>🌃 A Dark Cyberpunk Noir World</h2>
+          <p>Step into a future city shaped by:</p>
+          <ul>
+            <li>Corporate corruption</li>
+            <li>Surveillance and cyber crime</li>
+            <li>Digital black markets</li>
+            <li>Neon-lit streets and moral decay</li>
+          </ul>
+          <p style="color: var(--muted); font-weight:700;">Every case reveals a new layer of the city’s underworld.</p>
+        </div>
+      </section>
+
+      <!-- FOR WHO + WHY DIFFERENT (Notion content restored) -->
+      <section id="for">
+        <div class="sectionCard">
+          <div class="grid2">
+            <div>
+              <h2>🔍 Who Is This Podcast & Game For?</h2>
+              <p>Cyberpunk Detective: Crime Podcast is for fans of:</p>
+              <ul>
+                <li><b>True crime podcasts</b></li>
+                <li><b>Cyberpunk stories</b></li>
+                <li><b>Detective games</b></li>
+                <li><b>Interactive fiction</b> and <b>text RPGs</b></li>
+                <li>Story-driven experiences without ads or grinding</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2>🚀 Why Cyberpunk Detective Is Different</h2>
+              <ul>
+                <li>Podcast <b>and</b> game in one app</li>
+                <li>Story-first design for mature audiences</li>
+                <li>No filler, no pay-to-win mechanics</li>
+                <li>Offline-friendly episodes and stories</li>
+                <li>Original cyberpunk universe</li>
+              </ul>
+
+              <div class="divider" role="separator" aria-label="divider"></div>
+
+              <p style="color: var(--muted2); font-weight:800;">
+                👉 <a style="color: var(--cyan); text-decoration:none;"
+                     href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=for_section&utm_term=download"
+                     target="_blank" rel="noopener">Download on Google Play</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DOWNLOAD (Notion content restored) -->
+      <section id="download">
+        <div class="sectionCard">
+          <h2>📱 Download Cyberpunk Detective: Crime Podcast</h2>
+          <p>The evidence is already waiting.</p>
+          <div class="heroActions" style="margin-top: 1rem;">
+            <a class="btn btn-primary"
+               href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes&utm_source=github_pages&utm_medium=organic&utm_campaign=download_section&utm_term=download"
+               target="_blank" rel="noopener">
+              Download on Google Play
+            </a>
+            <a class="btn" href="#faq">Read the FAQ</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ (Notion content restored) -->
+      <section id="faq">
+        <div class="sectionCard">
+          <h2>❓ FAQ</h2>
+
+          <details>
+            <summary>Is Cyberpunk Detective a real true crime podcast?</summary>
+            <p>It’s a <b>fictional true crime podcast</b>, inspired by real investigative formats and set in a cyberpunk world.</p>
+          </details>
+
+          <details>
+            <summary>Can I play instead of just listening?</summary>
+            <p>Yes. You can switch between <b>podcast mode</b> and <b>interactive detective gameplay</b> at any time.</p>
+          </details>
+
+          <details>
+            <summary>Is Cyberpunk Detective a game or a podcast?</summary>
+            <p>It’s both — a <b>crime podcast</b> and an <b>interactive text-based detective RPG</b>.</p>
+          </details>
+
+          <details>
+            <summary>Does it work offline?</summary>
+            <p>Yes. Stories and episodes can be enjoyed offline once downloaded.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <div class="footerRow">
+          <div>
+            <div style="font-weight:950; letter-spacing:.06em; text-transform:uppercase;">Cyberpunk Detective</div>
+            <div style="margin-top:.35rem;">© <span id="year"></span> · All rights reserved</div>
+          </div>
+
+          <div class="footerLinks" aria-label="Footer links">
+            <a href="https://play.google.com/store/apps/details?id=com.gurrulabs.miniaicrimes" target="_blank" rel="noopener">Google Play</a>
+            <a href="#top">Back to top</a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Smooth scrolling (respects reduced-motion)
+    (function() {
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          if (!id || id === '#') return;
+          const target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth', block:'start'});
+          history.pushState(null, '', id);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
